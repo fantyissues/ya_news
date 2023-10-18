@@ -10,6 +10,7 @@ from news.models import Comment, News
 
 User = get_user_model()
 
+
 class TestHomePage(TestCase):
     HOME_URL = reverse('news:home')
 
