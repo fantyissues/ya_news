@@ -38,6 +38,7 @@ def test_availability_for_comment_edit_and_delete(
     response = parametrized_client.get(reverse(name, args=(comment.pk,)))
     assert response.status_code == expected_status
 
+
 @pytest.mark.parametrize(
     'name',
     ('news:edit', 'news:delete'),

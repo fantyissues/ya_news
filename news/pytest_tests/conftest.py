@@ -1,11 +1,18 @@
+from datetime import timedelta
+
 import pytest
+from django.conf import settings
+from django.utils import timezone
 
 from news.models import Comment, News
+
+NEWS_TITLE = 'Заголовок новости'
+NEWS_TEXT = 'Текст новости'
 
 
 @pytest.fixture
 def author(django_user_model):
-    return django_user_model.objects.create(username='Автор')
+    return django_user_model.objects.create(username='Автор комментария')
 
 
 @pytest.fixture
@@ -28,8 +35,25 @@ def reader_client(reader, client):
 @pytest.fixture
 def news(db):
     return News.objects.create(
-        title='Заголовок новости',
-        text='Текст новости',
+        title=NEWS_TITLE,
+        text=NEWS_TEXT,
+    )
+
+
+@pytest.fixture
+def news_pk_for_args(news):
+    return news.pk,
+
+
+@pytest.fixture
+def news_set(db):
+    return News.objects.bulk_create(
+        News(
+            title=f'{NEWS_TITLE} {index}',
+            text=NEWS_TEXT,
+            date=timezone.now().date() - timedelta(days=index),
+        )
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
     )
 
 
@@ -43,5 +67,10 @@ def comment(author, news):
 
 
 @pytest.fixture
-def news_pk_for_args(news):
-    return news.pk,
+def comment_set(author, news):
+    for index in range(2):
+        comment = Comment.objects.create(
+            news=news, author=author, text=f'Текст {index}',
+        )
+        comment.created = timezone.now() + timedelta(days=index)
+        comment.save()
