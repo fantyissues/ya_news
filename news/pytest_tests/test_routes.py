@@ -33,7 +33,7 @@ def test_pages_availability(client, name, args):
     ('news:edit', 'news:delete'),
 )
 def test_availability_for_comment_edit_and_delete(
-    parametrized_client, expected_status, name, comment
+        parametrized_client, expected_status, name, comment
 ):
     response = parametrized_client.get(reverse(name, args=(comment.pk,)))
     assert response.status_code == expected_status
