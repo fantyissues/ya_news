@@ -16,7 +16,7 @@ class TestCommentCreation(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.news = News.objects.create(title='Заголовок', text='Текст')
-        cls.url = reverse('news:detail', args=(cls.news.id,))
+        cls.url = reverse('news:detail', args=(cls.news.pk,))
         cls.user = User.objects.create(username='Мимо Крокодил')
         cls.auth_client = Client()
         cls.auth_client.force_login(cls.user)
